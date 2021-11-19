@@ -16,6 +16,10 @@ navigator.mediaDevices
   .then((stream) => {
     addVideoStream(vid, stream);
 
+    peer.on('call', call=> {
+        call.answer(stream)
+    })
+
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
     });
@@ -25,9 +29,9 @@ peer.on("open", (id) => {
   socket.emit("join-room", ROOM_ID, id);
 });
 
-// socket.on("user-connected", (userId) => {
-//   console.log("user connectec - " + userId);
-// });
+socket.on("user-connected", (userId) => {
+  console.log("user connected - " + userId);
+});
 
 function connectToNewUser(userId, stream) {
   const call = peer.call(userId, stream);
